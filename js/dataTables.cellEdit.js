@@ -65,7 +65,8 @@ jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
                 var oldValue = cell.data();
                 cell.data(newValue);
                 //Return cell & row.
-                settings.onUpdate(cell, row, oldValue);
+                if(typeof settings.onUpdate === "function")
+                    settings.onUpdate(cell, row, oldValue);
             }
             // Get current page
             var currentPageIndex = table.page.info().page;
@@ -200,6 +201,9 @@ function getInputHtml(currentColumnIndex, settings, oldValue) {
         case "textarea":
         case "textarea-confirm":
             input.html = "<textarea id='ejbeatycelledit' class='" + inputCss + "'>"+oldValue+"</textarea><a href='javascript:void(0);' class='" + confirmCss + "' onclick='$(this).updateEditableCell(this)'>Confirm</a> <a href='javascript:void(0);' class='" + cancelCss + "' onclick='$(this).cancelEditableCell(this)'>Cancel</a>";
+            break;
+        case "number":
+            input.html = "<input id='ejbeatycelledit' type='number' class='" + inputCss + "' onfocusout='$(this).updateEditableCell(this)' value='" + oldValue + "'></input>";
             break;
         default: // text input
             input.html = "<input id='ejbeatycelledit' class='" + inputCss + "' onfocusout='$(this).updateEditableCell(this)' value='" + oldValue + "'></input>";
